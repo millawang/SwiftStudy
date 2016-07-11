@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<playground version='6.0' target-platform='ios' display-mode='raw'>
+    <pages>
+        <page name='First Page'/>
+        <page name='practicePage'/>
+        <page name='ControlFlowPage'/>
+        <page name='Function'/>
+        <page name='Closure'/>
+        <page name='Enumeration'/>
+        <page name='Class&amp;Structures'/>
+        <page name='Properties'/>
+        <page name='Method'/>
+        <page name='Subscript'/>
+        <page name='Initialization'/>
+        <page name='Inheritance'/>
+    </pages>
+</playground>
