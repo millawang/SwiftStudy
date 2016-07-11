@@ -89,8 +89,13 @@ var item = ShoppingListItema()
 // 没有 custom initializers時
 struct SizeA {
     var width = 0.0, height = 0.0
+    var text = "unKnow"
 }
-let twoByTwo = SizeA(width: 2.0, height: 2.0)
+let twoByTwoA = SizeA()
+print(" \(twoByTwoA.width) and \(twoByTwoA.text)")
+
+let twoByTwoB = SizeA(width: 2.0, height: 2.0, text:"Miffy")
+print(" \(twoByTwoB.width) and \(twoByTwoB.text) ")
 
 //: ### Initializer Delegation for Value Type
 //Initializer Delegation: 初始化程序再去呼叫別的初始化程序
@@ -141,9 +146,9 @@ print("centerRect 的尺寸是 (\(centerRect.size.width), \(centerRect.size.heig
 //: ![The real head of the household?](convenience.png)
 
 /*: ### Relationships between designated and convenience
- * Convenience initializers的建構過程中，必須委任類別本身中的另一個initializers(可以是designated initializers或convenience initializers)。
- * Convenience initializers可以一直委任另一個Convenience initializers(一個接著一個)，但最後必須要委任一個designated initializers。
- * designated initializers必須要委任其父類別的designated initializers(如果有父類別的話)。
+ * Convenience initializers的建構過程中，必須呼叫類別本身中的另一個initializers(可以是Designated initializers或convenience initializers)。
+ * Convenience initializers可以一直呼叫另一個Convenience initializers(一個接著一個)，但最後必須要呼叫一個designated initializers。
+ * Designated initializers 如果有父類別必須由父類別的designated initializers呼叫。
  */
 /*: 
  一個簡單的記憶方法
@@ -154,18 +159,16 @@ print("centerRect 的尺寸是 (\(centerRect.size.width), \(centerRect.size.heig
 //: ![The real head of the household?](class_init.png)[#Image(imageLiteral: "up_init.png")#]
 /*: 
  ### Two-Phase Initialization
- * Convenience initializer 第一步必需是呼叫 Designated initializer(self.init)；
- * Designated initializer 第一步是初始化所有 stored properties，接著必需呼叫 super 的 Designated initializer。
+ * 1.每個儲存屬性通過他們自已的建構子來設置初始狀態，確認都初始狀態後才會執行第二階段。
+ * 2.每個儲存屬性都可以進一步的設定他們自定的屬性值。
  */
 /*:
 Safety check
-* 1.Designated initializer必須保證它所在類別引入的所有properties都必須先初始化完成，之後才能將其它init任務向上代理給父類別中的initializer。如上所述，一個物件的內存只有在其所有儲存型屬性確定之後才能完全初始化。為了滿足這一規則，指定initializer必須保證它所在類別引入的屬性在它往上代理之前先完成化。
-* 2.Designated initializer必須先向上代理呼叫父類別initializer，然後再為繼承的屬性設置新值。如果沒這麼做，Designated initializer賦予的新值將被父類別中的建構器所覆蓋。
-* 3.Convenience initializer必須先代理呼叫同一類別中的其它initializer，然後再為任意屬性賦新值。如果沒這麼做，Convenience initializer賦予的新值將被同一類別中其它指定建構器所覆蓋。
+* 1.Designated initializer必須保證它所在類別引入的所有properties都必須先初始化完成，之後才能將其它init任務向上代理給父類別中的initializer。如上所述，一個物件的內存只有在其所有儲存型屬性確定之後才能完全初始化。為了滿足這一規則，指定initializer必須保證它所在類別引入的屬性在它往上呼叫之前先完成初始化。
+* 2.Designated initializer必須先向上呼叫父類別initializer，然後再為繼承的屬性設置新值。如果沒這麼做，Designated initializer賦予的新值將被父類別中的建構器所覆蓋。
+* 3.Convenience initializer必須先呼叫同一類別中的其它initializer，然後再為任意屬性賦新值。如果沒這麼做，Convenience initializer賦予的新值將被同一類別中其它指定建構器所覆蓋。
 * 4.initializer在第一階段建構完成之前，不能呼叫任何實例方法、不能讀取任何實例屬性的值，也不能參考self的值。
 */
-//: ![The real head of the household?](up_init.png)
-//: ![The real head of the household?](down_init.png)
 //: ### Initializer Inheritance and Overriding
 class Food {
     var name: String
