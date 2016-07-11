@@ -2,7 +2,7 @@
 //: # Initalization
 struct Fahrenheit {
     var temperature: Double
-    init() {
+    init() { //建構子
         temperature = 32.0
     }
 }
@@ -78,13 +78,13 @@ beetsQuestion.ask()
 // Prints "How about beets?"
 beetsQuestion.response = "I also like beets. (But not with cheese.)"
 //: ## Default Initializers
-//: ### Because all properties of the ShoppingListItem class have default values, and because it is a base class with no superclass, ShoppingListItem automatically gains a default initializer
-class ShoppingListItem {
+//: Because all properties of the ShoppingListItem class have default values, and because it is a base class with no superclass, ShoppingListItem automatically gains a default initializer
+class ShoppingListItema {
     var name: String?  //default nil
     var quantity = 1
     var purchased = false
 }
-var item = ShoppingListItem()
+var item = ShoppingListItema()
 //: ### Memberwise Initializers for Structure Types
 // 没有 custom initializers時
 struct SizeA {
@@ -151,7 +151,7 @@ print("centerRect 的尺寸是 (\(centerRect.size.width), \(centerRect.size.heig
  * Convenience initializers must always delegate across.
  */
  
-//: ![The real head of the household?](class_init.png)
+//: ![The real head of the household?](class_init.png)[#Image(imageLiteral: "up_init.png")#]
 /*: 
  ### Two-Phase Initialization
  * Convenience initializer 第一步必需是呼叫 Designated initializer(self.init)；
@@ -164,7 +164,173 @@ Safety check
 * 3.Convenience initializer必須先代理呼叫同一類別中的其它initializer，然後再為任意屬性賦新值。如果沒這麼做，Convenience initializer賦予的新值將被同一類別中其它指定建構器所覆蓋。
 * 4.initializer在第一階段建構完成之前，不能呼叫任何實例方法、不能讀取任何實例屬性的值，也不能參考self的值。
 */
+//: ![The real head of the household?](up_init.png)
+//: ![The real head of the household?](down_init.png)
 //: ### Initializer Inheritance and Overriding
+class Food {
+    var name: String
+    init(name: String) {
+        self.name = name
+    }
+    convenience init() {
+        self.init(name: "[Unnamed]")
+    }
+}
+//: ![The real head of the household?](override_init.png)
+let namedMeat = Food(name: "Bacon")
+// namedMeat 的名字是 "Bacon」
+print("name is \(namedMeat.name)")
+let mysteryMeat = Food()
+print("name is \(mysteryMeat.name)")
+
+class RecipeIngredient: Food {
+    var quantity: Int
+    init(name: String, quantity: Int) {
+        self.quantity = quantity
+        super.init(name: name)
+    }
+    convenience override init(name: String) {
+        self.init(name: name, quantity: 2)
+    }
+}
+//: ![The real head of the household?](inherited_init.png)
+let oneMysteryItem = RecipeIngredient()
+print("oneMysteryItem has \(oneMysteryItem.quantity) \(oneMysteryItem.name)")
+let oneBacon = RecipeIngredient(name: "Bacon")
+print("oneBacon has \(oneBacon.quantity) \(oneBacon.name)")
+let sixEggs = RecipeIngredient(name: "Eggs", quantity: 6)
+print("sixEggs has \(sixEggs.quantity) \(sixEggs.name)")
+
+class ShoppingListItem: RecipeIngredient {
+    var purchased = false
+    var description: String {
+        var output = "\(quantity) x \(name)"
+        output += purchased ? " ✔" : " ✘"
+        return output
+    }
+}
+
+var breakfastList = [
+    ShoppingListItem(),
+    ShoppingListItem(name: "Bacon"),
+    ShoppingListItem(name: "Eggs", quantity: 6),
+]
+
+breakfastList[0].name = "Orange juice"
+breakfastList[0].purchased = true
+breakfastList[2].purchased = true
+
+for item in breakfastList {
+    print(item.description)
+}
+// 2 x Orange juice ✔
+// 2 x Bacon ✘
+// 6 x Eggs ✘
+//: ![The real head of the household?](2override_init.png)
+/*:
+ ### Failable Initializers
+ * 可失敗的(Failable Initializer)初始化方法 init?()，return nil 表示初始化失敗，在實例化時是一個 optional 值。
+ * Failable Initializer 的 Initializer Delegation 跟其他初始化方法的 Initializer Delegation 規則一樣。
+ * Failable Initializer 的override跟其他初始化方法的override規則也一樣，而且子類可override父類的 Failable Initializer 成為 nonfailable Initializer，此時子類要在其中 force-unwrap 父類的 Failable Initializer 结果。
+ * 初始化方法用 required 修飾時，表示繼承的所有子類必須實作這個方法
+ * 抛出錯誤類型的初始化方法，它不但可以 Failable，而且可以知道初始化失敗的錯誤類型
+ */
+struct Animal {
+    let species: String
+    init?(species: String) {
+        if species.isEmpty { return nil }
+        self.species = species
+    }
+}
+
+let someCreature = Animal(species: "Giraffe")
+// someCreature is of type Animal?, not Animal
+
+if let giraffe = someCreature {
+    print("An animal was initialized with a species of \(giraffe.species)")
+}
+// Prints "An animal was initialized with a species of Giraffe"
+
+//:Return nil
+let anonymousCreature = Animal(species: "")
+// anonymousCreature is of type Animal?, not Animal
+
+if anonymousCreature == nil {
+    print("The anonymous creature could not be initialized")
+}
+// Prints "The anonymous creature could not be initialized"
 
 
-//: [Next](@next)
+//:required
+class SomeClass {
+    required init() {
+        // initializer implementation goes here
+    }
+}
+class SomeSubclass: SomeClass {
+    required init() {
+        // subclass implementation of the required initializer goes here
+    }
+}
+
+//:Overriding a Failable Initializer
+class Document {
+    var name: String?
+    // this initializer creates a document with a nil name value
+    init() {}
+    // this initializer creates a document with a nonempty name value
+    init?(name: String) {
+        if name.isEmpty { return nil }
+        self.name = name
+    }
+    
+    init(name: String  ,aa: String) {
+        self.name = name
+    }
+}
+    
+class AutomaticallyNamedDocument: Document {
+    override init() {
+        super.init()
+        self.name = "[Untitled]"
+    }
+    override init(name: String) {
+        super.init()
+        if name.isEmpty {
+            self.name = "[Untitled]"
+        } else {
+            self.name = name
+        }
+    }
+    
+    //注意反過來不行override
+//    override init?(name: String ,aa: String) {
+//        super.init()
+//    }
+}
+
+//:Setting a Default Property Value with a Closure or Function
+struct Checkerboard {
+    let boardColors: [Bool] = {
+        //
+        var temporaryBoard = [Bool]()
+        var isBlack = false
+        for i in 1...10 {
+            for j in 1...10 {
+                temporaryBoard.append(isBlack)
+                isBlack = !isBlack
+            }
+            isBlack = !isBlack
+        }
+        return temporaryBoard //一定要bool
+    }()
+    func squareIsBlackAtRow(row: Int, column: Int) -> Bool {
+        return boardColors[(row * 10) + column]
+    }
+}
+let board = Checkerboard()
+print(board.squareIsBlackAtRow(0, column: 1))
+// 輸出 "true"
+print(board.squareIsBlackAtRow(9, column: 9))
+// 輸出 "false"
+ 
