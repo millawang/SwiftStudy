@@ -164,11 +164,26 @@ print("centerRect 的尺寸是 (\(centerRect.size.width), \(centerRect.size.heig
  */
 /*:
 Safety check
-* 1.Designated initializer必須保證它所在類別引入的所有properties都必須先初始化完成，之後才能將其它init任務向上代理給父類別中的initializer。如上所述，一個物件的內存只有在其所有儲存型屬性確定之後才能完全初始化。為了滿足這一規則，指定initializer必須保證它所在類別引入的屬性在它往上呼叫之前先完成初始化。
+* 1.Designated initializer必須保證當下類別引入的所有properties都必須先初始化完成，之後才能將其它init任務向上呼叫父類別中的initializer。如上所述，一個物件的內存只有在當下所有儲存型屬性確定之後才能完全初始化。為了滿足這一規則，指定initializer必須保證當下所在類別引入的屬性在它往上呼叫之前先完成初始化。
 * 2.Designated initializer必須先向上呼叫父類別initializer，然後再為繼承的屬性設置新值。如果沒這麼做，Designated initializer賦予的新值將被父類別中的建構器所覆蓋。
 * 3.Convenience initializer必須先呼叫同一類別中的其它initializer，然後再為任意屬性賦新值。如果沒這麼做，Convenience initializer賦予的新值將被同一類別中其它指定建構器所覆蓋。
 * 4.initializer在第一階段建構完成之前，不能呼叫任何實例方法、不能讀取任何實例屬性的值，也不能參考self的值。
 */
+class test1 {
+    var name:String?
+    init() {
+        name = "1"
+        print(self);
+    }
+}
+
+class test2: test1 {
+    override init() {
+        self.name = "234"  //error
+        super.init()
+        
+    }
+}
 //: ### Initializer Inheritance and Overriding
 class Food {
     var name: String
@@ -178,6 +193,7 @@ class Food {
     convenience init() {
         self.init(name: "[Unnamed]")
     }
+    
 }
 //: ![The real head of the household?](override_init.png)
 let namedMeat = Food(name: "Bacon")
