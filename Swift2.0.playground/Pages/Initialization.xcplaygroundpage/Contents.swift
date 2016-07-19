@@ -86,7 +86,7 @@ class ShoppingListItema {
 }
 var item = ShoppingListItema()
 //: ### Memberwise Initializers for Structure Types
-// 没有 custom initializers時
+// 没有 custom initializers時, 自動產生 memberwise initializer, initializer的參數就是全部的 properties
 struct SizeA {
     var width = 0.0, height = 0.0
     var text = "unKnow"
@@ -179,7 +179,7 @@ class test1 {
 
 class test2: test1 {
     override init() {
-        self.name = "234"  //error
+        //self.name = "234"  //error
         super.init()
         
     }
@@ -321,17 +321,30 @@ class AutomaticallyNamedDocument: Document {
             self.name = name
         }
     }
+/*: 
+> ### 注意反過來不行override
+> override init?(name: String ,aa: String) {
+>       super.init()
+>   }
+> }
+> ### end
+*/
     
-    //注意反過來不行override
-//    override init?(name: String ,aa: String) {
-//        super.init()
-//    }
-}
+//: ### Setting a Default Property Value with a Closure or Function
+/*:
+> ### class SomeClass {
+> ### let someProperty: SomeType = {
+>      在這個closure中給 someProperty 創建一個預設值
+>      someValue 必須和 SomeType 型別相同
+> ###     return someValue
+> ###     }()
+> ### }
+ */
 
-//:Setting a Default Property Value with a Closure or Function
+
 struct Checkerboard {
     let boardColors: [Bool] = {
-        //
+        
         var temporaryBoard = [Bool]()
         var isBlack = false
         for i in 1...10 {

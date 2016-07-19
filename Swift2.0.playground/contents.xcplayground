@@ -12,6 +12,7 @@
         <page name='Method'/>
         <page name='Subscript'/>
         <page name='Initialization'/>
+        <page name='Deinitialization'/>
         <page name='Inheritance'/>
     </pages>
 </playground>
