@@ -321,7 +321,8 @@ class AutomaticallyNamedDocument: Document {
             self.name = name
         }
     }
-/*: 
+}
+/*:
 > ### 注意反過來不行override
 > override init?(name: String ,aa: String) {
 >       super.init()
@@ -361,8 +362,9 @@ struct Checkerboard {
     }
 }
 let board = Checkerboard()
-print(board.squareIsBlackAtRow(0, column: 1))
+//print(board.squareIsBlackAtRow(0, column: 1))
 // 輸出 "true"
-print(board.squareIsBlackAtRow(9, column: 9))
+//print(board.squareIsBlackAtRow(9, column: 9))
 // 輸出 "false"
+
  
