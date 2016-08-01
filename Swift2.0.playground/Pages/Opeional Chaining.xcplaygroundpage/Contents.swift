@@ -178,4 +178,44 @@ if let beginsWithThe =
     }
 }
 
+/*:
+ Optional
+ */
+let name:String? = "twostraws"
+let password: String? = "fr0st1les"
+
+switch (name, password){
+case let(.some(name), .some(password)):
+    print("Hello, \(name)")
+case let(.some(name), .none):
+    print("Please enter a password")
+default:
+    print("Who are you?")
+    
+}
+
+
+switch (name, password) {
+case let(name?, password?):
+    print("Hello, \(name)")
+case let(username?, nil):
+    print("Please enter a password")
+default:
+    print("Who are you?")
+    
+}
+
+
+import Foundation
+let data: [AnyObject?] = ["Bill", nil, 69, "Ted"]
+for case let .some(datum) in data {
+    print(datum)
+}
+for case let datum? in data {
+    print(datum)
+}
+
+
+
+
 //: [Next](@next)
