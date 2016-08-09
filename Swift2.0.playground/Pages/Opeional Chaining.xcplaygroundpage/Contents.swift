@@ -185,9 +185,9 @@ let name:String? = "twostraws"
 let password: String? = "fr0st1les"
 
 switch (name, password){
-case let(.some(name), .some(password)):
+case let(.Some(name), .Some(password)):
     print("Hello, \(name)")
-case let(.some(name), .none):
+case let(.Some(name), .None):
     print("Please enter a password")
 default:
     print("Who are you?")
@@ -195,9 +195,19 @@ default:
 }
 
 
+switch (name, password){
+case let(.Some(matchName), .Some(matchPassword)):
+    print("Hello, \(name), \(matchName)")
+case let(.Some(matchName), .None):
+    print("Please enter a password")
+default:
+    print("Who are you?")
+    
+}
+
 switch (name, password) {
-case let(name?, password?):
-    print("Hello, \(name)")
+case let(username?, password?):
+    print("Hello, \(name) \(username) \(password)")
 case let(username?, nil):
     print("Please enter a password")
 default:
@@ -208,7 +218,7 @@ default:
 
 import Foundation
 let data: [AnyObject?] = ["Bill", nil, 69, "Ted"]
-for case let .some(datum) in data {
+for case let .Some(datum) in data {
     print(datum)
 }
 for case let datum? in data {
