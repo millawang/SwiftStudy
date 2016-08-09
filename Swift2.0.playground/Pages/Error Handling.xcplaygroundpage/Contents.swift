@@ -116,7 +116,11 @@ func processFile(fileName: String) throws {
     if exists(fileName) {
         let file = open(fileName)
         defer {
+            print("defer...1")
             close(file)
+        }
+        defer {
+            print("defer...2")
         }
         while let line = try? file.readline() {
             
