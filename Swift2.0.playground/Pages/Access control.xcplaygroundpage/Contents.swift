@@ -36,8 +36,9 @@ private var privateMsg = "Not Found!"
 internal var internalCode = 404
 let responseTuple = (internalCode, privateMsg) //private
 
-// function的access control是由此函式的傳入參數及回傳值所推斷出來。如果依據傳入參數以及回傳值所得出的函
-// 式存有出入，那麼就要明確地指定此函式的access control
+//:Function
+// 層級是由此函式的傳入參數及回傳值所推斷出來。如果依據傳入參數以及回傳值所得出的函
+// 式存有出入，那麼就要明確地指定此函式的層級
 private func someFunction() -> (SomeInternalClass, SomePrivateClass) {
     return (SomeInternalClass(), SomePrivateClass())
 }
